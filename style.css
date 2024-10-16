@@ -1,0 +1,132 @@
+@font-face {
+    font-family: 'titulo';
+    src: url("Skymate.otf");
+}
+body {
+    font-family:'titulo';  
+    text-align: center;  
+    padding: 20px;  
+    animation: mudarfundo 7s infinite; 
+}
+@keyframes mudarfundo{
+  0% {
+    background-color: #f4f4f4;  
+  }
+  50% {
+    background-color: #fae3e3;
+  }
+  100% {
+    background-color: #f4f4f4;
+  }
+} 
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    background: #fff;
+}
+
+h1 {
+    color: #da8a40;
+}
+
+.card {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    display: inline-block;
+    width: 100px;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.button {
+    background-color: #ff6347;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin: 10px;
+}
+
+.button:hover {
+    background-color: #ff4500;
+}
+
+.answer-container {
+    display: none;
+    margin-top: 20px;
+}
+
+.current-team {
+    font-weight: bold;
+    margin: 20px;
+    font-size: 1.2em;
+}
+
+.score {
+    margin: 20px;
+    font-size: 1.5em;
+}
+
+.used {
+    background-color: #d3d3d3;
+    cursor: not-allowed;
+}
+
+.teamA {
+    background-color: #aee0ff;
+}
+
+.teamB {
+    background-color: #ff6d83;
+}
+
+.final-score {
+    display: none;
+    margin: 20px;
+    font-size: 1.5em;
+}
+
+.restart-btn {
+    display: none;
+}
+
+.team-boxa {
+    display: inline-block;
+    width: 175px;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    background-color: #aee0ff;
+}
+.team-boxb {
+    display: inline-block;
+    width: 175px;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    background-color: #ff6d83;
+}
+#start-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}

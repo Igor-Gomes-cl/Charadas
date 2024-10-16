@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Jogo de Charadas</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Jogo de Charadas</h1>
+        <div class="team-boxa" id="team-a-box">
+            <div class="score" id="score-a">Time A: 0</div>
+        </div>
+        <div class="team-boxb" id="team-b-box">
+            <div class="score" id="score-b">Time B: 0</div>
+        </div>
+       <div id="start-container">
+
+            <button class="button" id="start-btn">Iniciar Jogo</button>
+        </div>
+        <div id="game-container" style="display: none;">
+            <div class="current-team" id="current-team">Time A, é a sua vez!</div>
+            <div id="cards-container">
+                <div class="card" data-id="1">Cartão 1</div>
+                <div class="card" data-id="2">Cartão 2</div>
+                <div class="card" data-id="3">Cartão 3</div>
+                <div class="card" data-id="4">Cartão 4</div>
+                <div class="card" data-id="5">Cartão 5</div>
+                <div class="card" data-id="6">Cartão 6</div>
+                <div class="card" data-id="7">Cartão 7</div>
+                <div class="card" data-id="8">Cartão 8</div>
+                <div class="card" data-id="9">Cartão 9</div>
+                <div class="card" data-id="10">Cartão 10</div>
+            </div>
+            <div id="question-container" style="display: none;">
+                <p id="question"></p>
+                <button class="button" id="reveal-answer">Revelar Resposta</button>
+            </div>
+            <div class="answer-container" id="answer-container" style="display: none;">
+                <p id="answer"></p>
+                <button class="button" id="correct-btn">Estava Certo</button>
+                <button class="button" id="wrong-btn">Estava Errado</button>
+            </div>
+            <div class="final-score" id="final-score"></div>
+            <button class="button restart-btn" id="restart-btn">Jogar Novamente</button>
+        </div>
+    </div>
+    <script>
+        const cards = document.querySelectorAll('.card');
+        const questionContainer = document.getElementById('question-container');
+        const questionText = document.getElementById('question');
+        const revealAnswerBtn = document.getElementById('reveal-answer');
+        const answerContainer = document.getElementById('answer-container');
+        const answerText = document.getElementById('answer');
+        const correctBtn = document.getElementById('correct-btn');
+        const wrongBtn = document.getElementById('wrong-btn');
+        const currentTeamDisplay = document.getElementById('current-team');
+        const scoreDisplayA = document.getElementById('score-a');
+        const scoreDisplayB = document.getElementById('score-b');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const restartBtn = document.getElementById('restart-btn');
+        const startBtn = document.getElementById('start-btn');
+        const gameContainer = document.getElementById('game-container');
+
+        const charades = {
+            1: { question: "O que é que sempre vai embora, mas nunca se move?", answer: "Um sorriso." },
+            2: { question: "Eu sou leve como uma pena, mas mesmo o homem mais forte não pode me segurar por muito tempo. O que sou eu?", answer: "O fôlego." },
+            3: { question: "O que é que se põe na mesa, é cortado, mas nunca se come?", answer: "Um baralho." },
+            4: { question: "O que é que tem muitos buracos, mas ainda consegue segurar água?", answer: "Uma esponja." },
+            5: { question: "O que é que sempre avança, mas nunca chega a lugar nenhum?", answer: "O tempo." },
+            6: { question: "O que é que mesmo atravessando o rio não se molha.", answer: "Uma ponte." },
+            7: { question: "Você pode me quebrar sem me tocar. O que sou eu?", answer: "Um segredo." },
+            8: { question: "O que é, o que é? Quanto mais se tira, maior fica.", answer: "Um buraco." },
+            9: { question: "Eu pertenço apenas ao mês de dezembro, e não sou um feriado. O que eu sou?", answer: 'A letra "d".'},
+            10: { question: "O que é que foi feito para andar e não anda.", answer: "A calçada." }
+        };
+
+        let currentId;
+        let currentTeam = 1; 
+        let scores = { A: 0, B: 0 };
+
+        startBtn.addEventListener('click', () => {
+            gameContainer.style.display = 'block';
+            document.getElementById('start-container').style.display = 'none';
+            updateScore();
+        });
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => handleCardClick(card));
+        });
+
+        function handleCardClick(card) {
+            // Se o cartão já foi usado, não faz nada
+            if (card.classList.contains('used')) {
+                alert("Este cartão já foi utilizado. Escolha outro!");
+                return;
+            }
+
+            // Marca o cartão como usado e muda a cor
+            card.classList.add('used');
+            card.classList.add(currentTeam === 1 ? 'teamA' : 'teamB');
+
+            currentId = card.getAttribute('data-id');
+            questionText.textContent = charades[currentId].question;
+            questionContainer.style.display = 'block';
+            answerContainer.style.display = 'none'; // Esconde a resposta se estava aberta
+        }
+
+        revealAnswerBtn.addEventListener('click', () => {
+            answerText.textContent = charades[currentId].answer;
+            answerContainer.style.display = 'block';
+        });
+
+        correctBtn.addEventListener('click', () => {
+            scores[currentTeam === 1 ? 'A' : 'B']++;
+            updateScore();
+            checkGameOver();
+        });
+
+        wrongBtn.addEventListener('click', () => {
+            scores[currentTeam === 1 ? 'A' : 'B']--;
+            updateScore();
+            checkGameOver();
+        });
+
+        function updateScore() {
+            scoreDisplayA.textContent = `Time A: ${scores.A}`;
+            scoreDisplayB.textContent = `Time B: ${scores.B}`;
+        }
+
+        function checkGameOver() {
+            // Verifica se todos os cartões foram usados
+            if (document.querySelectorAll('.used').length === cards.length) {
+                const winner = scores.A > scores.B ? "Time A ganhou!" : scores.A < scores.B ? "Time B ganhou!" : "Empate!";
+                finalScoreDisplay.textContent = `${winner}`;
+                finalScoreDisplay.style.display = 'block';
+                restartBtn.style.display = 'block';
+                disableCards();
+            } else {
+                switchTeam();
+            }
+        }
+
+        function disableCards() {
+            cards.forEach(card => {
+                card.classList.add('used');
+                card.style.cursor = 'not-allowed';
+            });
+        }
+
+        function switchTeam() {
+            currentTeam = currentTeam === 1 ? 2 : 1; // Alterna entre Time A e Time B
+            currentTeamDisplay.textContent = `Time ${currentTeam === 1 ? 'A' : 'B'}, é a sua vez!`;
+            resetGame();
+        }
+
+        function resetGame() {
+            questionContainer.style.display = 'none';
+            answerContainer.style.display = 'none';
+        }
+
+        restartBtn.addEventListener('click', () => {
+            scores = { A: 0, B: 0 };
+            currentTeam = 1; // Reinicia para Time A
+            currentTeamDisplay.textContent = `Time A, é a sua vez!`;
+            scoreDisplayA.textContent = `Time A: 0`;
+            scoreDisplayB.textContent = `Time B: 0`;
+            finalScoreDisplay.style.display = 'none';
+            restartBtn.style.display = 'none';
+            cards.forEach(card => {
+                card.classList.remove('used');
+                card.classList.remove('teamA', 'teamB');
+                card.style.cursor = 'pointer';
+            });
+        });
+    </script>
+</body>
+</html>
